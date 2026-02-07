@@ -1,0 +1,25 @@
+@page
+@model BookAuthorApp.Pages.Authors.CreateModel
+@{
+    ViewData["Title"] = "Create Author";
+}
+
+<h1>Create Author</h1>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Author.FirstName"></label>
+        <input asp-for="Author.FirstName" class="form-control" />
+        <span asp-validation-for="Author.FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Author.LastName"></label>
+        <input asp-for="Author.LastName" class="form-control" />
+        <span asp-validation-for="Author.LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Author.BirthDate"></label>
+        <input asp-for="Author.BirthDate" class="form-control" type="date"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>

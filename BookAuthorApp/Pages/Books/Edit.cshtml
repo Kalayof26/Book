@@ -1,0 +1,47 @@
+@page "{id:int}"
+@model BookAuthorApp.Pages.Books.EditModel
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<h1>Edit Book</h1>
+
+<form method="post">
+    <!-- 🔥 КЛЮЧОВИЙ РЯДОК -->
+    <input type="hidden" asp-for="Book.Id" />
+
+    <div class="form-group">
+        <label asp-for="Book.Title"></label>
+        <input asp-for="Book.Title" class="form-control" />
+        <span asp-validation-for="Book.Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Book.PublicationYear"></label>
+        <input asp-for="Book.PublicationYear" class="form-control" type="number" />
+        <span asp-validation-for="Book.PublicationYear" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Book.Price"></label>
+        <input asp-for="Book.Price" class="form-control" type="number" step="0.01"/>
+        <span asp-validation-for="Book.Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Book.ISBN"></label>
+        <input asp-for="Book.ISBN" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Book.AuthorId"></label>
+        <select asp-for="Book.AuthorId"
+                class="form-control"
+                asp-items="Model.AuthorsSelect">
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
