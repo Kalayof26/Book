@@ -1,25 +1,26 @@
-@page
+@page "{id:int}"
 @model BookAuthorApp.Pages.Authors.DetailsModel
 
-<h2>@Model.Author.FirstName @Model.Author.LastName</h2>
-<p>@(Model.Author.BirthDate?.ToShortDateString() ?? "N/A")</p>
+<h1>@Model.Author.FirstName @Model.Author.LastName</h1>
+<p>Birth Date: @(Model.Author.BirthDate?.ToShortDateString() ?? "N/A")</p>
 
 @if (!Model.Author.Books.Any())
 {
-    <p>No books for this author</p>
+    <p>No books for this author.</p>
 }
 else
 {
     <ul>
-@foreach (var book in Model.Author.Books)
+@foreach(var book in Model.Author.Books)
 {
-        <li>
-            @book.Title
-            <a asp-page="/Books/Edit" asp-route-id="@book.Id">Edit Book</a>
-        </li>
+    <li>
+        @book.Title
+        <a asp-page="/Books/Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit Book</a>
+    </li>
 }
     </ul>
 }
 
-<a asp-page="/Library/Index">Back to Library</a>
+<a asp-page="/Library/Index" class="btn btn-secondary">Back to Library</a>
+
 

@@ -13,19 +13,14 @@ namespace BookAuthorApp.Services
             _context = context;
         }
 
-        // Повертає всі книги з авторами
         public async Task<List<Book>> GetAllAsync()
         {
-            return await _context.Books
-                .Include(b => b.Author)
-                .ToListAsync();
+            return await _context.Books.Include(b => b.Author).ToListAsync();
         }
 
-        // Фільтрує книги по AuthorId і Title
         public async Task<List<Book>> FilterAsync(int? authorId, string? title)
         {
-            IQueryable<Book> query = _context.Books
-                .Include(b => b.Author);
+            IQueryable<Book> query = _context.Books.Include(b => b.Author);
 
             if (authorId.HasValue)
                 query = query.Where(b => b.AuthorId == authorId.Value);
@@ -36,12 +31,9 @@ namespace BookAuthorApp.Services
             return await query.ToListAsync();
         }
 
-        // Повертає книгу за Id включно з автором
         public async Task<Book?> GetByIdAsync(int id)
         {
-            return await _context.Books
-                .Include(b => b.Author)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            return await _context.Books.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task AddAsync(Book book)
@@ -52,30 +44,25 @@ namespace BookAuthorApp.Services
 
         public async Task UpdateAsync(Book book)
         {
-            var existingBook = await _context.Books
-                .FirstOrDefaultAsync(b => b.Id == book.Id);
+            var existing = await _context.Books.FirstOrDefaultAsync(b => b.Id == book.Id);
+            if (existing == null) return;
 
-            if (existingBook == null)
-                return;
-
-            existingBook.Title = book.Title;
-            existingBook.PublicationYear = book.PublicationYear;
-            existingBook.Price = book.Price;
-            existingBook.AuthorId = book.AuthorId;
-
+            existing.Title = book.Title;
+            existing.PublicationYear = book.PublicationYear;
+            existing.Price = book.Price;
+            existing.AuthorId = book.AuthorId;
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var book = await _context.Books
-                .FirstOrDefaultAsync(b => b.Id == id);
-
-            if (book == null)
-                return;
-
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
+

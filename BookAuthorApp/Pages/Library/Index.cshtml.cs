@@ -19,7 +19,6 @@ namespace BookAuthorApp.Pages.Library
         }
 
         public List<Book> Books { get; set; } = new();
-
         public SelectList Authors { get; set; } = null!;
 
         [BindProperty(SupportsGet = true)]
@@ -38,7 +37,6 @@ namespace BookAuthorApp.Pages.Library
                 FullName = $"{a.FirstName} {a.LastName}"
             }), "Id", "FullName");
 
-            // Фільтруємо книги
             Books = await _bookService.FilterAsync(AuthorId, Title);
         }
 
@@ -54,3 +52,4 @@ namespace BookAuthorApp.Pages.Library
         }
     }
 }
+

@@ -3,6 +3,7 @@ using BookAuthorApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Linq;
 
 namespace BookAuthorApp.Pages.Books
 {
@@ -26,12 +27,17 @@ namespace BookAuthorApp.Pages.Books
         {
             var existing = await _bookService.GetByIdAsync(id);
             if (existing == null)
-                return RedirectToPage("Index");
+                return RedirectToPage("/Library/Index");
 
             Book = existing;
 
             var authors = await _authorService.GetAllAsync();
-            AuthorsSelect = new SelectList(authors, "Id", "FirstName", Book.AuthorId);
+            AuthorsSelect = new SelectList(
+                authors.Select(a => new { a.Id, FullName = $"{a.FirstName} {a.LastName}" }),
+                "Id",
+                "FullName",
+                Book.AuthorId
+            );
 
             return Page();
         }
@@ -41,12 +47,18 @@ namespace BookAuthorApp.Pages.Books
             if (!ModelState.IsValid)
             {
                 var authors = await _authorService.GetAllAsync();
-                AuthorsSelect = new SelectList(authors, "Id", "FirstName", Book.AuthorId);
+                AuthorsSelect = new SelectList(
+                    authors.Select(a => new { a.Id, FullName = $"{a.FirstName} {a.LastName}" }),
+                    "Id",
+                    "FullName",
+                    Book.AuthorId
+                );
                 return Page();
             }
 
             await _bookService.UpdateAsync(Book);
-            return RedirectToPage("Index");
+            return RedirectToPage("/Library/Index");
         }
     }
 }
+

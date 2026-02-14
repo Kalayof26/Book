@@ -35,30 +35,31 @@ namespace BookAuthorApp.Services
 
         public async Task UpdateAsync(Author author)
         {
-            var existing = await _context.Authors
-                .FirstOrDefaultAsync(a => a.Id == author.Id);
-
+            var existing = await _context.Authors.FirstOrDefaultAsync(a => a.Id == author.Id);
             if (existing == null) return;
 
             existing.FirstName = author.FirstName;
             existing.LastName = author.LastName;
             existing.BirthDate = author.BirthDate;
-
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var author = await _context.Authors
                 .Include(a => a.Books)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
-            if (author == null) return false;
-            if (author.Books.Any()) return false;
+            if (author != null)
+            {
+                // спочатку видаляємо книги автора
+                _context.Books.RemoveRange(author.Books);
 
-            _context.Authors.Remove(author);
-            await _context.SaveChangesAsync();
-            return true;
+                // потім автора
+                _context.Authors.Remove(author);
+
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

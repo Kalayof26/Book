@@ -5,8 +5,9 @@
 }
 
 <h1>Authors</h1>
-<a asp-page="Create" class="btn btn-primary">Add Author</a>
-<table class="table">
+<a asp-page="Create" class="btn btn-primary mb-3">Add Author</a>
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>First Name</th>
@@ -26,10 +27,15 @@
             <td>@author.Books.Count</td>
             <td>
                 <a asp-page="Edit" asp-route-id="@author.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-page="Delete" asp-route-id="@author.Id" class="btn btn-sm btn-danger">Delete</a>
+
+                <form method="post" asp-page-handler="Delete" asp-route-id="@author.Id" style="display:inline">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+
                 <a asp-page="Details" asp-route-id="@author.Id" class="btn btn-sm btn-info">Details</a>
             </td>
         </tr>
     }
     </tbody>
 </table>
+
