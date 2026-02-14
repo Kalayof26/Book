@@ -1,0 +1,91 @@
+@page
+@model BookAuthorApp.Pages.Library.IndexModel
+@{
+    Layout = "_Layout";
+}
+
+<h1 class="library-title">Library</h1>
+
+<form method="get" id="filterForm" class="filter-form">
+    <select asp-for="AuthorId" asp-items="Model.Authors" class="form-select" onchange="this.form.submit()">
+        <option value="">All authors</option>
+    </select>
+
+    <input asp-for="Title" placeholder="Book title" class="form-input" />
+
+    <button type="submit" class="btn btn-primary">Search</button>
+    <button type="submit" asp-page-handler="Reset" class="btn btn-secondary">Reset</button>
+</form>
+
+<table class="table table-striped library-table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Price</th>
+            <th>Author</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var book in Model.Books)
+{
+        <tr>
+            <td>@book.Title</td>
+            <td>@book.PublicationYear</td>
+            <td>@book.Price.ToString("C")</td>
+            <td>
+                <a asp-page="/Authors/Details" asp-route-id="@book.AuthorId" class="author-link">
+                    @book.Author!.FirstName @book.Author.LastName
+                </a>
+            </td>
+            <td>
+                <a asp-page="/Books/Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
+                <form method="post" asp-page-handler="Delete" asp-route-id="@book.Id" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<a asp-page="/Library/Index" class="btn btn-link back-link">Back to Library</a>
+
+<style>
+.library-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #258cfb;
+}
+
+.filter-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.form-input, .form-select {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.95rem;
+}
+
+.author-link {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.author-link:hover {
+    text-decoration: underline;
+}
+
+.back-link {
+    color: #258cfb;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+</style>

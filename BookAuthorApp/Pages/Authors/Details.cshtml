@@ -1,37 +1,25 @@
-@page "{id:int}"
+@page
 @model BookAuthorApp.Pages.Authors.DetailsModel
-@{
-    ViewData["Title"] = "Author Details";
-}
 
-<h1>@Model.Author.FirstName @Model.Author.LastName</h1>
-<p>Birth Date: @Model.Author.BirthDate?.ToShortDateString()</p>
+<h2>@Model.Author.FirstName @Model.Author.LastName</h2>
+<p>@(Model.Author.BirthDate?.ToShortDateString() ?? "N/A")</p>
 
-<h2>Books</h2>
-@if (Model.Author.Books.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Year</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var book in Model.Author.Books)
-        {
-            <tr>
-                <td>@book.Title</td>
-                <td>@book.PublicationYear</td>
-                <td>@book.Price</td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
+@if (!Model.Author.Books.Any())
 {
     <p>No books for this author</p>
 }
-<a asp-page="Index" class="btn btn-secondary">Back</a>
+else
+{
+    <ul>
+@foreach (var book in Model.Author.Books)
+{
+        <li>
+            @book.Title
+            <a asp-page="/Books/Edit" asp-route-id="@book.Id">Edit Book</a>
+        </li>
+}
+    </ul>
+}
+
+<a asp-page="/Library/Index">Back to Library</a>
+

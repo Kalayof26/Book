@@ -13,6 +13,7 @@ namespace BookAuthorApp.Services
             _context = context;
         }
 
+        // Повертає всі книги з авторами
         public async Task<List<Book>> GetAllAsync()
         {
             return await _context.Books
@@ -20,6 +21,22 @@ namespace BookAuthorApp.Services
                 .ToListAsync();
         }
 
+        // Фільтрує книги по AuthorId і Title
+        public async Task<List<Book>> FilterAsync(int? authorId, string? title)
+        {
+            IQueryable<Book> query = _context.Books
+                .Include(b => b.Author);
+
+            if (authorId.HasValue)
+                query = query.Where(b => b.AuthorId == authorId.Value);
+
+            if (!string.IsNullOrWhiteSpace(title))
+                query = query.Where(b => b.Title.Contains(title));
+
+            return await query.ToListAsync();
+        }
+
+        // Повертає книгу за Id включно з автором
         public async Task<Book?> GetByIdAsync(int id)
         {
             return await _context.Books
@@ -35,27 +52,30 @@ namespace BookAuthorApp.Services
 
         public async Task UpdateAsync(Book book)
         {
-            var existing = await _context.Books
+            var existingBook = await _context.Books
                 .FirstOrDefaultAsync(b => b.Id == book.Id);
 
-            if (existing == null) return;
+            if (existingBook == null)
+                return;
 
-            existing.Title = book.Title;
-            existing.PublicationYear = book.PublicationYear;
-            existing.Price = book.Price;
-            existing.AuthorId = book.AuthorId;
+            existingBook.Title = book.Title;
+            existingBook.PublicationYear = book.PublicationYear;
+            existingBook.Price = book.Price;
+            existingBook.AuthorId = book.AuthorId;
 
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
-            if (book == null) return;
+            var book = await _context.Books
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (book == null)
+                return;
 
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
         }
     }
 }
-

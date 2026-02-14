@@ -5,8 +5,13 @@
 }
 
 <h1>Books</h1>
-<a asp-page="Create" class="btn btn-primary">Add Book</a>
-<table class="table">
+
+<div class="mb-3">
+    <a asp-page="Create" class="btn btn-primary">Add Book</a>
+    <a asp-page="/Authors/Index" class="btn btn-secondary">Authors</a>
+</div>
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
@@ -25,10 +30,35 @@
             <td>@book.PublicationYear</td>
             <td>@book.Price</td>
             <td>@book.ISBN</td>
-            <td>@book.Author.FirstName @book.Author.LastName</td>
             <td>
-                <a asp-page="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-page="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-danger">Delete</a>
+                @if (book.Author != null)
+                {
+                    <a asp-page="/Authors/Details" asp-route-id="@book.Author.Id">
+                        @book.Author.FirstName @book.Author.LastName
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted">No author</span>
+                }
+            </td>
+            <td>
+                <a asp-page="Edit"
+                   asp-route-id="@book.Id"
+                   class="btn btn-sm btn-warning">
+                    Edit
+                </a>
+
+                <form method="post"
+                      asp-page-handler="Delete"
+                      asp-route-id="@book.Id"
+                      style="display:inline">
+                    <button type="submit"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Delete this book?')">
+                        Delete
+                    </button>
+                </form>
             </td>
         </tr>
     }
