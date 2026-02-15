@@ -20,7 +20,7 @@ namespace BookAuthorApp.Pages.Authors
         {
             var author = await _service.GetByIdAsync(id);
             if (author == null)
-                return RedirectToPage("Index");
+                return NotFound();
 
             Author = author;
             return Page();

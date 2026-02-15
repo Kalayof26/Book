@@ -1,39 +1,31 @@
 @page
 @model BookAuthorApp.Pages.Books.IndexModel
-@{
-    ViewData["Title"] = "Books";
-}
 
 <h1>Books</h1>
 
 <a asp-page="Create" class="btn btn-primary mb-3">Add Book</a>
 
-<table class="table table-striped">
+<table class="table">
     <thead>
         <tr>
             <th>Title</th>
-            <th>Year</th>
-            <th>Price</th>
             <th>Author</th>
-            <th>Actions</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var book in Model.Books)
-    {
+@foreach (var book in Model.Books)
+{
         <tr>
             <td>@book.Title</td>
-            <td>@book.PublicationYear</td>
-            <td>@book.Price</td>
-            <td>@book.Author?.FirstName @book.Author?.LastName</td>
+            <td>@book.Author!.LastName</td>
             <td>
+                
                 <a asp-page="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
-                <form method="post" asp-page-handler="Delete" asp-route-id="@book.Id" style="display:inline">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
             </td>
         </tr>
-    }
+}
     </tbody>
 </table>
+
 
