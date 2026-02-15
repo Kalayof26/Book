@@ -1,7 +1,27 @@
-﻿@page
+@page
 @model BookAuthorApp.Pages.IndexModel
-<h1>Welcome to BookAuthorApp</h1>
-<p>
-    <a class="btn btn-primary" href="/Authors">Authors</a>
-    <a class="btn btn-primary" href="/Books">Books</a>
-</p>
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4">📚 Book Author App</h1>
+
+    <p class="lead mt-3">
+        Manage your books and authors in one place
+    </p>
+
+    <div class="mt-4">
+        <a asp-page="/Library/Index" class="btn btn-primary btn-lg me-2">
+            Open Library
+        </a>
+
+        <a asp-page="/Books/Index" class="btn btn-outline-secondary btn-lg me-2">
+            Books
+        </a>
+
+        <a asp-page="/Authors/Index" class="btn btn-outline-secondary btn-lg">
+            Authors
+        </a>
+    </div>
+</div>

@@ -1,23 +1,23 @@
 @page
 @model BookAuthorApp.Pages.Library.IndexModel
 @{
-    Layout = "_Layout";
+    ViewData["Title"] = "Library";
 }
 
-<h1 class="library-title">Library</h1>
+<h1>Library</h1>
 
-<form method="get" id="filterForm" class="filter-form">
+<form method="get" class="mb-3">
     <select asp-for="AuthorId" asp-items="Model.Authors" class="form-select" onchange="this.form.submit()">
         <option value="">All authors</option>
     </select>
 
-    <input asp-for="Title" placeholder="Book title" class="form-input" />
+    <input asp-for="Title" placeholder="Book title" class="form-control mt-2" />
 
-    <button type="submit" class="btn btn-primary">Search</button>
-    <button type="submit" asp-page-handler="Reset" class="btn btn-secondary">Reset</button>
+    <button type="submit" class="btn btn-primary mt-2">Search</button>
+    <button type="submit" asp-page-handler="Reset" class="btn btn-secondary mt-2">Reset</button>
 </form>
 
-<table class="table table-striped library-table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
@@ -28,36 +28,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var book in Model.Books)
-{
-        <tr>
-            <td>@book.Title</td>
-            <td>@book.PublicationYear</td>
-            <td>@book.Price.ToString("C")</td>
-            <td>
-                <a asp-page="/Authors/Details" asp-route-id="@book.AuthorId" class="author-link">
-                    @book.Author!.FirstName @book.Author.LastName
-                </a>
-            </td>
-            <td>
-                <a asp-page="/Books/Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
-                <form method="post" asp-page-handler="Delete" asp-route-id="@book.Id" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-}
+        @foreach (var book in Model.Books)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.PublicationYear</td>
+                <td>@book.Price</td>
+                <td>
+                    <a asp-page="/Authors/Details" asp-route-id="@book.AuthorId">
+                        @book.Author!.FirstName @book.Author.LastName
+                    </a>
+                </td>
+                <td>
+                    <a asp-page="/Books/Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@book.Id" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
-<a asp-page="/Library/Index" class="btn btn-link back-link">Back to Library</a>
 
-<style>
-.library-title { font-size: 2rem; margin-bottom:1rem; color:#258cfb; }
-.filter-form { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;}
-.form-input, .form-select { padding:0.4rem 0.6rem; font-size:0.95rem;}
-.author-link { color:#0d6efd; text-decoration:none;}
-.author-link:hover { text-decoration:underline;}
-.back-link { color:#258cfb; text-decoration:none;}
-.back-link:hover { text-decoration:underline;}
-</style>

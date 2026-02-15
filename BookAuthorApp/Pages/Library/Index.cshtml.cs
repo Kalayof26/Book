@@ -3,7 +3,6 @@ using BookAuthorApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq;
 
 namespace BookAuthorApp.Pages.Library
 {
@@ -29,15 +28,18 @@ namespace BookAuthorApp.Pages.Library
 
         public async Task OnGetAsync()
         {
+            // Завжди формуємо SelectList
             var authors = await _authorService.GetAllAsync();
+            Authors = new SelectList(authors, "Id", "LastName", AuthorId);
 
-            Authors = new SelectList(authors.Select(a => new
-            {
-                a.Id,
-                FullName = $"{a.FirstName} {a.LastName}"
-            }), "Id", "FullName");
-
+            // Фільтруємо книги
             Books = await _bookService.FilterAsync(AuthorId, Title);
+        }
+
+        public IActionResult OnGetReset()
+        {
+            // Скидаємо фільтри
+            return RedirectToPage("/Library/Index");
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
@@ -45,11 +47,7 @@ namespace BookAuthorApp.Pages.Library
             await _bookService.DeleteAsync(id);
             return RedirectToPage();
         }
-
-        public IActionResult OnGetReset()
-        {
-            return RedirectToPage();
-        }
     }
 }
+
 

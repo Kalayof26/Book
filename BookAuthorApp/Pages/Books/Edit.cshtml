@@ -1,5 +1,6 @@
 @page "{id:int}"
 @model BookAuthorApp.Pages.Books.EditModel
+
 @{
     ViewData["Title"] = "Edit Book";
 }
@@ -7,53 +8,41 @@
 <h1>Edit Book</h1>
 
 <form method="post">
-    <!-- 🔥 Ключовий рядок для редагування -->
     <input type="hidden" asp-for="Book.Id" />
 
-    <div class="form-group mb-2">
+    <div class="form-group">
         <label asp-for="Book.Title"></label>
         <input asp-for="Book.Title" class="form-control" />
         <span asp-validation-for="Book.Title" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-2">
+    <div class="form-group">
         <label asp-for="Book.PublicationYear"></label>
         <input asp-for="Book.PublicationYear" class="form-control" type="number" />
-        <span asp-validation-for="Book.PublicationYear" class="text-danger"></span>
     </div>
 
-    <div class="form-group mb-2">
+    <div class="form-group">
         <label asp-for="Book.Price"></label>
-        <input asp-for="Book.Price" class="form-control" type="number" step="0.01"/>
-        <span asp-validation-for="Book.Price" class="text-danger"></span>
+        <input asp-for="Book.Price" class="form-control" type="number" step="0.01" />
     </div>
 
-    <div class="form-group mb-2">
+    <div class="form-group">
         <label asp-for="Book.ISBN"></label>
-        <input asp-for="Book.ISBN" class="form-control" readonly />
+        <input asp-for="Book.ISBN" class="form-control" />
     </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="Book.AuthorId">Author</label>
+    <div class="form-group">
+        <label asp-for="Book.AuthorId"></label>
         <select asp-for="Book.AuthorId"
-                class="form-control"
-                asp-items="Model.AuthorsSelect">
+                asp-items="Model.AuthorsSelect"
+                class="form-control">
         </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+    <a asp-page="/Books/Index" class="btn btn-secondary">Cancel</a>
 </form>
 
-<style>
-.back-library {
-    margin-left: 10px;
-    color: #258cfb;
-    text-decoration: none;
-}
-.back-library:hover {
-    text-decoration: underline;
-}
-</style>
+
 
 

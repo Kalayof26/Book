@@ -3,7 +3,6 @@ using BookAuthorApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Linq;
 
 namespace BookAuthorApp.Pages.Books
 {
@@ -19,25 +18,30 @@ namespace BookAuthorApp.Pages.Books
         }
 
         [BindProperty]
-        public Book Book { get; set; } = new();
+        public Book Book { get; set; } = null!;
 
-        public SelectList AuthorsSelect { get; set; } = null!;
+        public List<SelectListItem> AuthorsSelect { get; set; } = new();
+
+        private async Task LoadAuthorsAsync()
+        {
+            var authors = await _authorService.GetAllAsync();
+
+            AuthorsSelect = authors.Select(a => new SelectListItem
+            {
+                Value = a.Id.ToString(),
+                Text = $"{a.FirstName} {a.LastName}",
+                Selected = Book != null && a.Id == Book.AuthorId
+            }).ToList();
+        }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var existing = await _bookService.GetByIdAsync(id);
-            if (existing == null)
-                return RedirectToPage("/Library/Index");
+            var book = await _bookService.GetByIdAsync(id);
+            if (book == null)
+                return RedirectToPage("/Books/Index");
 
-            Book = existing;
-
-            var authors = await _authorService.GetAllAsync();
-            AuthorsSelect = new SelectList(
-                authors.Select(a => new { a.Id, FullName = $"{a.FirstName} {a.LastName}" }),
-                "Id",
-                "FullName",
-                Book.AuthorId
-            );
+            Book = book;
+            await LoadAuthorsAsync();
 
             return Page();
         }
@@ -46,19 +50,14 @@ namespace BookAuthorApp.Pages.Books
         {
             if (!ModelState.IsValid)
             {
-                var authors = await _authorService.GetAllAsync();
-                AuthorsSelect = new SelectList(
-                    authors.Select(a => new { a.Id, FullName = $"{a.FirstName} {a.LastName}" }),
-                    "Id",
-                    "FullName",
-                    Book.AuthorId
-                );
+                await LoadAuthorsAsync();
                 return Page();
             }
 
             await _bookService.UpdateAsync(Book);
-            return RedirectToPage("/Library/Index");
+            return RedirectToPage("/Books/Index");
         }
     }
 }
+
 

@@ -1,16 +1,21 @@
 @page
 @model BookAuthorApp.Pages.Books.IndexModel
+@{
+    ViewData["Title"] = "Books";
+}
 
 <h1>Books</h1>
 
 <a asp-page="Create" class="btn btn-primary mb-3">Add Book</a>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
+            <th>Year</th>
+            <th>Price</th>
             <th>Author</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -18,14 +23,29 @@
 {
         <tr>
             <td>@book.Title</td>
-            <td>@book.Author!.LastName</td>
+            <td>@book.PublicationYear</td>
+            <td>@book.Price</td>
+            <td>@book.Author!.FirstName @book.Author.LastName</td>
             <td>
-                
-                <a asp-page="Edit" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-page="Edit"
+                   asp-route-id="@book.Id"
+                   class="btn btn-sm btn-warning">Edit</a>
+
+                <form method="post"
+                      asp-page-handler="Delete"
+                      asp-route-id="@book.Id"
+                      style="display:inline">
+                    <button type="submit"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Delete this book?')">
+                        Delete
+                    </button>
+                </form>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
 
 
